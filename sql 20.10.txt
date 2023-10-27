@@ -1,0 +1,97 @@
+SELECT CONCAT(LEFT(imie, 1), ". ", nazwisko ) AS aktor FROM aktorzy; => Wyswietl dane qwszystkich aktorow wedlug naatepujacego formatu: 
+	pierwsza litera imienia, kropka, spacja, nazwisko.
+
+SELECT tytul AS tytul FROM filmy ORDER BY length(tytul) ASC; 
+
+SELECT tytul, cena FROM filmy ORDER BY rok_produkcji DESC LIMIT 3; => 3 najnowsze filmy 
+
+SELECT imie, LEFT(imie, 1) AS PIERWSZA, RIGHT(imie, 1) AS OSTATNIA FROM klienci;  => PELNE IMIE, PIERWSZA LITERE IMIENIA , OSTATNIA LITERE IMIENIA.
+
+SELECT imie FROM `klienci` WHERE LEFT(imie, 1) = RIGHT(imie,1 ); 
+
+SELECT tytul FROM `filmy` WHERE substring(tytul, -2, 1) = 'o'; => tytuly w ktorych przedostatnia litera ro 'o'.
+
+SELECT concat(lower(imie), '.', lower(nazwisko), '@zsti.pl') AS email FROM klienci; 
+
+
+					połaczenia tabel 
+
+	1. polaczenia kartezjanskie  - kazdy z kazdym na wszystkie mozliwe sposoby.
+		select * from tabela1 cross join tabela2;
+
+	2. naturalne - rekordy sa scalane, jesli posiadaja jednakowe wartosci w jednakowy.
+		select * from tabela1 natural join tabela2;
+
+	3. w oparciu o warunek polaczeniowy - rekordy sa scalane jesl spelniaja zadany warunek logiczny.
+		select * from tabela1 join tabela2 on warunek połączeniowy;
+
+	4. polaczenia zwrotne - rekordy tabeli sa laczone z rekordami tej samej tabeli.
+		select * from tabela1 as t1 join tabela2 as t2 on warunek bezpołączeniowy;
+		select * from aktorzy as a1 join aktorzy as a2 on a1.imie = a2.imie WHERE a1.imie = 'tom';
+		select * from aktorzy as a1 join aktorzy as a2 on a1.imie = a2.imie ORDER BY a1.imie = 'tom';
+
+	5. lewostronne - Jest to złączenie zewnętrzne lewostronne. W wyniku zwracane są wszystkie wiersze występujące w tabeli po lewej stronie.
+	6. prawostronne - 
+	7. inner join - 
+	
+
+	select id_kopii, tytul, czy_dostepna from kopie NATURAL JOIN filmy WHERE cena < 8 ORDER BY id_kopii limit 2; 
+	
+	1. do trzech pozostalych polaczen napisz def. w polskiim i w jezyku sql.
+	2. przerobic uzywajac aliasow, i po kropce.
+
+
+
+	____________________________________________________________________________________________________________
+	
+				27.10 sql
+
+	SELECT kopie.id_kopii, filmy.tytul FROM kopie JOIN filmy ON kopie.id_filmu = filmy.id_filmu; => uporzadkuj wedlug identyfikatorow kopii.
+
+
+
+
+
+	SELECT DISTINCT tytul FROM filmy NATURAL JOIN kopie WHERE czy_dostepna = "t" ORDER BY `filmy`.`tytul` ASC => tytuly filmow ktorych kopie sa dostepne w wypozyczalni
+
+	SELECT id_kopii FROM kopie JOIN filmy on kopie.id_filmu = filmy.id_filmu WHERE rok_produkcji = 1984 LIMIT 4; => identyfikator kopii filmow wyprodukowanych w roku 1984.
+
+	SELECT data_wypozyczenia, data_zwrotu, nazwisko FROM wypozyczenia JOIN klienci on wypozyczenia.id_klienta = klienci.id_klienta; => wyswietlenie klientow ktorzy wypozyczyli
+
+	SELECT DISTINCT nazwisko, tytul FROM klienci JOIN wypozyczenia on klienci.id_klienta = wypozyczenia.id_klienta JOIN kopie ON wypozyczenia.id_kopii
+	 = kopie.id_kopii JOIN filmy on filmy.id_filmu = kopie.id_filmu; => 
+
+	SELECT filmy.tytul, filmy.rok_produkcji FROM filmy JOIN kopie ON filmy.id_filmu = kopie.id_filmu JOIN wypozyczenia on kopie.id_kopii = wypozyczenia.id_kopii
+	 JOIN klienci ON wypozyczenia.id_klienta = klienci.id_klienta WHERE klienci.nazwisko = "Kowalski"; => 
+
+	SELECT klienci.nazwisko FROM klienci
+	JOIN wypozyczenia on klienci.id_klienta = wypozyczenia.id_klienta
+	WHERE data_wypozyczenia ORDER BY data_wypozyczenia ASC LIMIT 1; => 
+
+	SELECT nazwisko FROM aktorzy JOIN obsada ON obsada.id_aktora = aktorzy.id_aktora JOIN filmy ON filmy.id_filmu = obsada.id_filmu WHERE filmy.tytul = "terminator"; =>
+	
+
+	SELECT tytul FROM filmy 
+	JOIN obsada ON obsada.id_filmu = filmy.id_filmu 
+	JOIN aktorzy ON obsada.id_aktora = aktorzy.id_aktora 
+	WHERE aktorzy.nazwisko = "De Niro"; =>
+
+	SELECT tytul FROM filmy 
+	JOIN kopie ON kopie.id_filmu = filmy.id_filmu
+	JOIN wypozyczenia ON  wypozyczenia.id_kopii = kopie.id_kopii
+	ORDER BY wypozyczenia.data_zwrotu - wypozyczenia.data_wypozyczenia DESC LIMIT 1;
+
+
+	SELECT DISTINCT nazwisko FROM klienci 
+	JOIN wypozyczenia ON wypozyczenia.id_klienta = klienci.id_klienta
+	WHERE wypozyczenia.data_wypozyczenia BETWEEN '2005-07-15' AND '2005-07-20';
+
+
+
+
+
+
+
+
+
+
